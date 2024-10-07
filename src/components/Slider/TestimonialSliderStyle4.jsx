@@ -8,7 +8,7 @@ const testimonialData = [
     avatarImgUrl: '/images/discorelogo2.png',
     testimonialText:
       '2022 yılından beri hizmet aldığım kaliteli bir firma. DisCore olarak tüm tasarımsal ve grafiksel işleri Alpha ile yapıyoruz ve kullanıcı memnuniyetinde artış sağlıyoruz, tavsiye ederim.',
-    avatarName: 'Discore Community',
+    avatarName: 'DisCore Community',
     avatarDesignation: 'Yazılım',
     ratings: '5',
   },
