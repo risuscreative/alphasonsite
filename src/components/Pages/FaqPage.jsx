@@ -9,7 +9,7 @@ import PageHeading from '../PageHeading';
 import Spacing from '../Spacing';
 
 export default function FaqPage() {
-  pageTitle('Frequently Asked Questions');
+  pageTitle('S.S.S.');
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
