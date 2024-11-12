@@ -7,7 +7,7 @@ import Spacing from '../Spacing'
 import SocialWidget from '../Widget/SocialWidget'
 
 export default function TeamDetails() {
-  pageTitle('Team Member');
+  pageTitle('Biz Kimiz?');
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
