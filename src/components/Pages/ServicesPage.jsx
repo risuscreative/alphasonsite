@@ -10,7 +10,7 @@ import TestimonialSlider from '../Slider/TestimonialSlider'
 import Spacing from '../Spacing'
 
 export default function ServicesPage() {
-  pageTitle('Service');
+  pageTitle('Hizmetler');
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
