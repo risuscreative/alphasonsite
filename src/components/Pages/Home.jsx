@@ -109,6 +109,7 @@ edecek en ideal çalışmayı hazırlar."
         />
       </div>
       {/* End FunFact Section */}
+
       {/* Start Blog Section */}
       <Spacing lg="90" md="80" />
       <Div className="cs-shape_wrap_4">
@@ -157,7 +158,13 @@ edecek en ideal çalışmayı hazırlar."
                     alt="Service"
                   />
                   <Spacing lg="0" md="30" />
-                </Div>
+              <iframe 
+        src="https://www.behance.net/alphaartworks" 
+        width="100%" 
+        height="500px" 
+        style="border:none;">
+    </iframe>              
+  </Div>
                 <Div className="col-lg-3 col-sm-6 cs-hidden_mobile"></Div>
                 <Div className="col-lg-3 col-sm-6">
                   <Card
