@@ -158,13 +158,7 @@ edecek en ideal çalışmayı hazırlar."
                     alt="Service"
                   />
                   <Spacing lg="0" md="30" />
-              <iframe 
-        src="https://www.behance.net/alphaartworks" 
-        width="100%" 
-        height="500px" 
-        style="border:none;">
-    </iframe>              
-  </Div>
+                </Div>
                 <Div className="col-lg-3 col-sm-6 cs-hidden_mobile"></Div>
                 <Div className="col-lg-3 col-sm-6">
                   <Card
