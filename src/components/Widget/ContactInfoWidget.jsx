@@ -12,7 +12,7 @@ export default function ContactInfoWidget({withIcon, title}) {
         </li>
         <li>
           {withIcon?<span className='cs-accent_color'>
-            <svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" height="24px" width="24px" fill="#7861ff"
+            <svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" x="-1px" y="0px" height="20px" width="22px" fill="#7861ff"
 	 viewBox="0 0 15 15" style={{enableBackground: "new 0 0 15 15"}}>
 <path className="st0" d="M6.4,5.4c-0.8,0-1.1,0-1.6,0.2C4.5,5.6,4.2,5.7,4.2,5.7c0,0,0.7-4.7,0.8-5.1c0.1-0.2-0.1-0.2-1.5-0.2
 	S2,0.4,2,0.4h0C2,0.5,1.5,3,1,6c-0.5,3.1-1,5.8-1,6.1c0,1.5,1.2,2.3,3.4,2.4c2.2,0.1,4.1-0.7,4.9-2.2c0.4-0.7,0.8-2.7,0.9-4.1
