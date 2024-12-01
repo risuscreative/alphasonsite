@@ -105,25 +105,19 @@ export default function Header({ variant }) {
               <Div className="cs-main_header_right" style={{gap: "1rem"}}>
                 <a target="_blank" href="https://bionluk.com/alphagraphicart">
                   <Div className="alpha-btn">
-<svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 25 25" style="enable-background:new 0 0 25 25;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#9EA1AD;}
-</style>
-<g id="Page-1">
-	<g id="Blog-Home" transform="translate(-425.000000, -236.000000)">
-		<g id="Group-24" transform="translate(425.000000, 236.000323)">
-			<path id="Fill-1" class="st0" d="M13.79,9.59c-2.91-0.56-4.23-1.08-4.23-2.35c0-1.13,1.22-1.97,3.34-1.97
-				c2.1,0,2.99,1.33,3.42,2.64c0.07,0.2,0.28,0.31,0.48,0.24l4.7-1.61c0.19-0.06,0.29-0.26,0.23-0.45C20.51,2.21,17.26,0,12.85,0
-				c-6.3,0-9.45,3.76-9.45,7.61c0,4.87,3.81,6.49,8.6,7.4c0.2,0.04,0.41,0.08,0.61,0.11c2.58,0.42,3.85,1.13,3.85,2.3
-				c0,1.41-1.32,2.3-3.62,2.3c-2.32,0-3.66-1.27-4.23-3.2c-0.05-0.18-0.24-0.27-0.42-0.21l-4.93,1.69
-				c-0.19,0.06-0.29,0.27-0.23,0.45C4.26,22.39,7.79,25,12.85,25c6.25,0,9.77-3.57,9.77-7.75C22.63,12.45,19.2,10.57,13.79,9.59"/>
-			<g id="Clip-21">
-			</g>
-		</g>
-	</g>
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="25.000000pt" height="25.000000pt" viewBox="0 0 25.000000 25.000000"
+ preserveAspectRatio="xMidYMid meet">
+
+<g transform="translate(0.000000,25.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M66 228 c-13 -13 -27 -32 -30 -44 -10 -32 27 -72 77 -81 32 -7 42
+-13 42 -28 0 -26 -31 -31 -55 -10 -13 12 -28 15 -45 11 -32 -8 -31 -16 1 -47
+35 -33 113 -34 145 -2 25 24 30 73 10 97 -7 8 -35 20 -62 26 -37 9 -49 16 -47
+29 4 21 32 26 50 7 17 -16 58 -11 58 8 -1 52 -98 75 -144 34z"/>
 </g>
 </svg>
+
 
         </Div>
                 </a>
