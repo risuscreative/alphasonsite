@@ -7,6 +7,7 @@ import ContactInfoWidget from '../Widget/ContactInfoWidget';
 import Div from '../Div';
 import DropDown from './DropDown';
 
+
 export default function Header({ variant }) {
   const [isSticky, setIsSticky] = useState(false);
   const [sideHeaderToggle, setSideHeaderToggle] = useState(false);
@@ -104,8 +105,9 @@ export default function Header({ variant }) {
               <Div className="cs-main_header_right" style={{gap: "1rem"}}>
                 <a target="_blank" href="https://bionluk.com/alphagraphicart">
                   <Div className="alpha-btn">
+
                   <svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" height="25px" width="25px" fill="#ffcc33"
-	 viewBox="0 0 15 15" style={{enableBackground: "new 0 0 15 15"}}>
+	viewBox="0 0 24 24"  style={{enableBackground: "new 0 0 15 15"}}>
 
 <path d="M9510 19934 c-30 -2 -136 -8 -235 -14 -1602 -97 -3043 -544 -4172
 -1296 -1537 -1024 -2470 -2599 -2594 -4379 -15 -216 -6 -782 15 -995 113
@@ -191,6 +193,7 @@ export default function Header({ variant }) {
           <Div className="cs-side_header_box">
             <SocialWidget />
           </Div>
+
         </Div>
       </Div>
     </>
