@@ -105,7 +105,7 @@ export default function Header({ variant }) {
                 <a target="_blank" href="https://bionluk.com/alphagraphicart">
                   <Div className="alpha-btn">
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="2000.000000pt" height="2000.000000pt" viewBox="0 0 2000.000000 2000.000000"
+ width="25pt" height="25pt" viewBox="0 0 15 15"
  preserveAspectRatio="xMidYMid meet">
 
 <g transform="translate(0.000000,2000.000000) scale(0.100000,-0.100000)"
