@@ -103,7 +103,7 @@ export default function Header({ variant }) {
                 </Div>
               </Div>
               <Div className="cs-main_header_right" style={{gap: "1rem"}}>
-                <a target="_blank" href="https://bionluk.com/alphagraphicart">
+                <a target="_blank" href="https://www.shopier.com/alphaartworks">
                   <Div className="alpha-btn">
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="23px" height="23px" viewBox="0 0 25.000000 25.000000"
@@ -126,7 +126,7 @@ fill="#9ea1ad" stroke="none">
                   <svg fill="#9ea1ad" width="25px" height="25px" viewBox="-2.5 -2 24 24" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin" class="jam jam-fiverr"><path d='M16.25 16.25v-10h-10v-.625c0-1.034.841-1.875 1.875-1.875H10V0H8.125A5.632 5.632 0 0 0 2.5 5.625v.625H0V10h2.5v6.25H0V20h8.75v-3.75h-2.5V10h6.285v6.25H10V20h8.75v-3.75h-2.5z'/><circle cx='14.375' cy='1.875' r='1.875'/></svg>
                   </Div>
                 </a>
-                <a target="_blank" href="https://bionluk.com/alphagraphicart">
+                <a target="_blank" href="https://bionluk.com/alphaartworks">
                   <Div className="alpha-btn">
                   <svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" height="25px" width="25px" fill="#9ea1ad"
 	 viewBox="0 0 15 15" style={{enableBackground: "new 0 0 15 15"}}>
