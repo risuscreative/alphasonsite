@@ -104,7 +104,7 @@ export default function Header({ variant }) {
               <Div className="cs-main_header_right" style={{gap: "1rem"}}>
                 <a target="_blank" href="https://bionluk.com/alphagraphicart">
                   <Div className="alpha-btn">
-                  <svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" height="25px" width="25px" fill="#9ea1ad"
+                  <svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" height="25px" width="25px" fill="#ffcc33"
 	 viewBox="0 0 15 15" style={{enableBackground: "new 0 0 15 15"}}>
 
 <path d="M9510 19934 c-30 -2 -136 -8 -235 -14 -1602 -97 -3043 -544 -4172
@@ -127,7 +127,6 @@ export default function Header({ variant }) {
 1933 673 73 35 124 95 147 172 23 78 19 106 -41 290 -226 688 -547 1332 -943
 1887 -232 326 -436 564 -737 860 -227 223 -383 357 -626 541 -981 739 -2213
 1208 -3593 1368 -384 45 -535 53 -1070 56 -286 1 -545 1 -575 -1z"/>
-
 </svg>
   
 
