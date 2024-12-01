@@ -11,6 +11,12 @@
   display: inline-block;
   max-width: 180px;
 }
+.alpha-btn svg {
+  display: block; /* Görünür yap */
+  visibility: visible; /* Gizli olmadığından emin ol */
+  z-index: 10; /* Diğer elemanların altında kalmasın */
+}
+
 .cs-site_header {
   position: absolute;
   width: 100%;
