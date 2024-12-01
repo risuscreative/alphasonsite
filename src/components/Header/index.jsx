@@ -104,9 +104,7 @@ export default function Header({ variant }) {
               <Div className="cs-main_header_right" style={{gap: "1rem"}}>
                 <a target="_blank" href="https://bionluk.com/alphagraphicart">
                   <Div className="alpha-btn">
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="25px" height="25px" viewBox="0 0 16 19"
- preserveAspectRatio="xMidYMid meet">
+                  <svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" height="25px" width="25px" fill="#9ea1ad"
 
 <g transform="translate(0.000000,2000.000000) scale(0.100000,-0.100000)"
 fill="#000000" stroke="none">
