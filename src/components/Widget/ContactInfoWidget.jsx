@@ -29,7 +29,7 @@ alphaartworks
         <li>
           {withIcon?<span className='cs-accent_color'>
             <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="25.000000pt" height="25.000000pt" viewBox="0 0 25.000000 25.000000"
+ width="20.000000pt" height="20.000000pt" viewBox="0 0 25.000000 25.000000"
  preserveAspectRatio="xMidYMid meet">
 
 <g transform="translate(-3.000000,25.000000) scale(0.100000,-0.100000)"
