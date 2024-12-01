@@ -110,7 +110,7 @@ export default function Header({ variant }) {
  preserveAspectRatio="xMidYMid meet">
 
 <g transform="translate(0.000000,25.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
+fill="#9ea1ad" stroke="none">
 <path d="M66 228 c-13 -13 -27 -32 -30 -44 -10 -32 27 -72 77 -81 32 -7 42
 -13 42 -28 0 -26 -31 -31 -55 -10 -13 12 -28 15 -45 11 -32 -8 -31 -16 1 -47
 35 -33 113 -34 145 -2 25 24 30 73 10 97 -7 8 -35 20 -62 26 -37 9 -49 16 -47
