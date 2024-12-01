@@ -117,7 +117,7 @@ export default function Header({ variant }) {
 	c0.5-0.1,0.8,0.1,0.8,0.5c0,0.3-0.2,1.4-0.5,2.9c-0.3,1.5-0.5,2.8-0.5,2.9c0,0.2,0.1,0.2,1.5,0.2l1.5,0l0.6-3.2
 	c0.3-1.8,0.6-3.5,0.6-3.8C14.5,6.6,14.2,6.1,13.6,5.8z"/>
 </svg>  
-
+        </Div>
                 </a>
                 <a target="_blank" href="https://www.fiverr.com/alphagraphicart">
                   <Div className="alpha-btn">
