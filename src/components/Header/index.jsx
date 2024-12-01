@@ -106,7 +106,6 @@ export default function Header({ variant }) {
                   <Div className="alpha-btn">
                   <svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" height="25px" width="25px" fill="#9ea1ad"
 
-<g transform="translate(0.000000,2000.000000) scale(0.100000,-0.100000)"
 fill="#000000" stroke="none">
 <path d="M9510 19934 c-30 -2 -136 -8 -235 -14 -1602 -97 -3043 -544 -4172
 -1296 -1537 -1024 -2470 -2599 -2594 -4379 -15 -216 -6 -782 15 -995 113
