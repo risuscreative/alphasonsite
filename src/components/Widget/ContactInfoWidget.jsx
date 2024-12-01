@@ -44,15 +44,15 @@ alphaartworks
         </li>
         <li>
           {withIcon?<span className='cs-accent_color'><Icon icon="mdi:email" /></span>:''}
-          destek.alphagrafik@gmail.com
+          info.alphartworks@gmail.com
         </li>
         <li>
           {withIcon?<span className='cs-accent_color'><Icon icon="mdi:instagram" /></span>:''}
-          @alphagraphicart
+          @alphartworkstudio
         </li>
         <li>
           {withIcon?<span className='cs-accent_color'><Icon icon="mdi:behance" /></span>:''}
-          behance.net/alphagrafik
+          behance.net/alphaartworks
         </li>
         
       </ul>
