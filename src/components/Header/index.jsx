@@ -69,7 +69,14 @@ export default function Header({ variant }) {
                         to="iletisim"
                         onClick={() => setMobileToggle(false)}
                       >
-                        
+                        Blog
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="https://blog.alphagraphic.net/"
+                        onClick={() => setMobileToggle(false)}
+                      >                        
                         İletişim
                       </NavLink>
                     </li>
