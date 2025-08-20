@@ -84,7 +84,10 @@ export default function Footer({copyrightText, logoSrc, logoAlt, text}) {
             </Div>
             <Div className="col-lg-3 col-sm-6">
               <Div className="cs-footer_item">
-                <a href="https://discord.gg/7Q7EbNKHha"><img src="https://i.hizliresim.com/aa3rg43.png" alt="Resim Yükle"></a>
+<a href="https://discord.gg/7Q7EbNKHha">
+  <img src="https://i.hizliresim.com/aa3rg43.png" alt="Resim Yükle" />
+</a>
+
               </Div>
             </Div>
           </Div>
