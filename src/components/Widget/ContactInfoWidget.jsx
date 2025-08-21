@@ -51,6 +51,10 @@ alphaartworks
           @alphartworkstudio
         </li>
         <li>
+          {withIcon?<span className='cs-accent_color'><Icon icon="mdi:address-marker" /></span>:''}
+          Kars, Türkiye
+        </li>
+        <li>
           {withIcon?<span className='cs-accent_color'><Icon icon="mdi:behance" /></span>:''}
           alphaartworks
         </li>
