@@ -66,7 +66,7 @@ export default function Header({ variant }) {
                     </li>
                     <li>
                       <NavLink
-                        to="blog.alphagraphic.net/"
+                        to="https://blog.alphagraphic.net/"
                         onClick={() => setMobileToggle(false)}
                       >
                         Blog
