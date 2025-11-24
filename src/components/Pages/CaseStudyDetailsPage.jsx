@@ -5,23 +5,67 @@ const MODEL_NAME = "gemini-2.5-flash-image-preview";
 const API_URL_BASE = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
 const API_KEY = ""; // Canvas ortamında otomatik sağlanacaktır.
 
-// --- KULLANICININ TEMEL BİLEŞEN EMÜLASYONLARI (Sadece Yapısal Elemanlar) ---
+// --- BİLEŞENLER ---
 
 /**
- * Spacing Bileşeni Emülasyonu: Sadece boşluk divi döndürür.
- * (lg: masaüstü, md: mobil)
+ * Header (Navigasyon) Emülasyonu
+ * Attığın resimdeki (resim.jpg) yapıyı taklit eder.
+ */
+const HeaderEmulator = () => (
+    <header className="cs-site_header cs-style1 cs-sticky_header">
+        <div className="cs-main_header">
+            <div className="container">
+                <div className="cs-main_header_in">
+                    {/* Sol: Logo */}
+                    <div className="cs-main_header_left">
+                        <a className="cs-site_branding" href="#">
+                            {/* Logo Placeholder - Sitenizin logosunu temsil eder */}
+                            <div className="flex items-center">
+                                <span className="cs-font_30 cs-bold cs-white_color">alpha</span>
+                                <span className="cs-font_18 cs-white_color ml-2" style={{opacity: 0.7}}>artworks</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    {/* Orta: Menü */}
+                    <div className="cs-main_header_center">
+                        <div className="cs-nav">
+                            <ul className="cs-nav_list">
+                                <li><a href="#" className="cs-active">Ana Sayfa</a></li>
+                                <li><a href="#">Tasarımlarımız</a></li>
+                                <li><a href="#">Hizmetlerimiz</a></li>
+                                <li><a href="#">Blog</a></li>
+                                <li><a href="#">İletişim</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    {/* Sağ: İkonlar */}
+                    <div className="cs-main_header_right">
+                        <div className="cs-toolbox">
+                            <span className="cs-icon_btn">S</span>
+                            <span className="cs-icon_btn">fi</span>
+                            <span className="cs-icon_btn">bi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+);
+
+/**
+ * Spacing Bileşeni
  */
 const Spacing = ({ lg, md }) => {
-    // Sizin CSS'iniz tarafından boşluklar sağlanacaktır.
     const customStyle = {
-        paddingTop: lg ? `${parseInt(lg) / 4}px` : '0',
-        paddingBottom: lg ? `${parseInt(lg) / 4}px` : '0',
+        height: lg ? `${parseInt(lg)}px` : '0',
     };
-    return <div className={`cs-spacing-h-${lg}-${md}`} style={customStyle}></div>;
+    return <div className="cs-spacing" style={customStyle}></div>;
 };
 
 /**
- * Div Bileşeni Emülasyonu: Sadece bir div döndürür.
+ * Div Bileşeni
  */
 const Div = ({ className, children }) => (
     <div className={className}>
@@ -30,16 +74,15 @@ const Div = ({ className, children }) => (
 );
 
 /**
- * SectionHeading Bileşeni Emülasyonu: Sol taraftaki başlığı oluşturur.
+ * SectionHeading Bileşeni
  */
 const SectionHeadingEmulator = ({ title }) => (
-    // Başlık için h2 ve $primary rengini kullanıyoruz
     <h2 className="cs-section_title cs-primary_color">
         {title}
     </h2>
 );
 
-// --- API LOJİĞİ VE ANA BİLEŞEN ---
+// --- ANA UYGULAMA ---
 
 export default function App() {
     const [base64ImageData, setBase64ImageData] = useState(null);
@@ -49,7 +92,6 @@ export default function App() {
     const [message, setMessage] = useState(null);
     const [messageType, setMessageType] = useState('info');
 
-    // Sayfa yüklendiğinde en üste kaydır
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -63,84 +105,52 @@ export default function App() {
         for (let i = 0; i < maxRetries; i++) {
             try {
                 const response = await fetch(url, options);
-
                 if (response.status === 429 || response.status >= 500) {
-                    if (i === maxRetries - 1) throw new Error("API'den tekrar eden başarısız yanıtlar.");
-                    
+                    if (i === maxRetries - 1) throw new Error("API hatası.");
                     const delay = Math.pow(2, i) * 1000 + Math.floor(Math.random() * 1000);
                     await new Promise(resolve => setTimeout(resolve, delay));
                     continue;
                 }
-
-                if (!response.ok) {
-                    const errorBody = await response.text();
-                    throw new Error(`API Hatası: ${response.status} - ${errorBody}`);
-                }
-
+                if (!response.ok) throw new Error(`API Hatası: ${response.status}`);
                 return response.json();
-
             } catch (error) {
                 if (i === maxRetries - 1) throw error;
-                const delay = Math.pow(2, i) * 1000 + Math.floor(Math.random() * 1000);
-                await new Promise(resolve => setTimeout(resolve, delay));
+                await new Promise(resolve => setTimeout(resolve, 1000));
             }
         }
     }, []);
 
     const processImage = useCallback(async () => {
         if (!base64ImageData || isLoading) return;
-
         setIsLoading(true);
-        // İşleniyor placeholder'ı
         setProcessedImageUrl('https://placehold.co/300x300/161616/e4e4e4?text=İşleniyor...');
         
         if (!prompt) {
             setIsLoading(false);
-            displayMessage('Lütfen bir düzenleme isteği (prompt) girin.', 'error');
+            displayMessage('Lütfen bir istek girin.', 'error');
             return;
         }
 
         const payload = {
-            contents: [{
-                parts: [
-                    { text: prompt },
-                    {
-                        inlineData: {
-                            mimeType: base64ImageData.startsWith('data:image/png') ? 'image/png' : 'image/jpeg',
-                            data: base64ImageData.split(',')[1]
-                        }
-                    }
-                ]
-            }],
-            generationConfig: {
-                responseModalities: ['TEXT', 'IMAGE']
-            },
-        };
-
-        const options = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            contents: [{ parts: [{ text: prompt }, { inlineData: { mimeType: 'image/png', data: base64ImageData.split(',')[1] } }] }],
+            generationConfig: { responseModalities: ['TEXT', 'IMAGE'] },
         };
 
         try {
-            const result = await fetchWithExponentialBackoff(`${API_URL_BASE}?key=${API_KEY}`, options);
+            const result = await fetchWithExponentialBackoff(`${API_URL_BASE}?key=${API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
             const base64Data = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+            if (!base64Data) throw new Error("Görsel oluşturulamadı.");
 
-            if (!base64Data) {
-                throw new Error("API'den görsel veri alınamadı. Lütfen daha spesifik bir istek deneyin.");
-            }
-
-            const imageUrl = `data:image/png;base64,${base64Data}`;
-            setProcessedImageUrl(imageUrl);
-            displayMessage('Görsel başarıyla düzenlendi! Sağdaki görseli kaydedebilirsiniz.', 'success');
-
+            setProcessedImageUrl(`data:image/png;base64,${base64Data}`);
+            displayMessage('Başarılı!', 'success');
         } catch (error) {
-            console.error("Görsel işleme hatası:", error);
             setProcessedImageUrl('https://placehold.co/300x300/450a0a/fca5a5?text=Hata');
-            displayMessage(`Hata oluştu: ${error.message || 'Lütfen tekrar deneyin.'}`, 'error');
-
+            displayMessage('Hata oluştu.', 'error');
         } finally {
             setIsLoading(false);
         }
@@ -148,383 +158,218 @@ export default function App() {
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
-        if (!file) {
-            setBase64ImageData(null);
-            setProcessedImageUrl(null);
-            return;
-        }
-
-        if (!file.type.startsWith('image/')) {
-            displayMessage('Lütfen geçerli bir görsel dosyası yükleyin.', 'error');
-            return;
-        }
-
+        if (!file) return;
         const reader = new FileReader();
         reader.onload = (e) => {
             setBase64ImageData(e.target.result);
             setProcessedImageUrl('https://placehold.co/300x300/161616/e4e4e4?text=Hazır');
-            displayMessage('Görsel başarıyla yüklendi. İstediğiniz düzenlemeyi yazıp butona tıklayın.', 'info');
+            displayMessage('Görsel yüklendi.', 'info');
         };
         reader.readAsDataURL(file);
     };
 
     const getMessageBoxClasses = () => {
-        let base = "mt-6 p-4 cs-radius_15 cs-font_18"; // Stillerinizi kullandık
+        let base = "mt-6 p-4 cs-radius_15 cs-font_18";
         if (!message) return "hidden";
-
-        switch (messageType) {
-            case 'success':
-                // Başarı (Koyu yeşil)
-                return `${base} bg-[#1e4620] text-[#a7f3d0] border border-[#347437]`;
-            case 'error':
-                 // Hata (Koyu kırmızı)
-                return `${base} bg-[#450a0a] text-[#fca5a5] border border-[#7f1d1d]`;
-            default:
-                // Bilgi (Accent Rengi - Mor)
-                return `${base} bg-[#39315d] text-[#c4b5fd] border border-[#5d4a93]`;
-        }
+        if (messageType === 'success') return `${base} bg-[#1e4620] text-[#a7f3d0] border border-[#347437]`;
+        if (messageType === 'error') return `${base} bg-[#450a0a] text-[#fca5a5] border border-[#7f1d1d]`;
+        return `${base} bg-[#39315d] text-[#c4b5fd] border border-[#5d4a93]`;
     };
 
-
     return (
-        // body ve html stilleri cs-gray_bg ve font-family ile sağlanacak
-        <div className="cs-gray_bg cs-primary_font min-h-screen">
+        <div className="cs-gray_bg cs-primary_font min-h-screen flex flex-col">
             
-            {/* Sayfa Başlık Alanı (PageHeading'in yerine) - Yüksekliği ayarlayarak Header altındaki boşluğu taklit ediyoruz */}
-            <div className="cs-page_heading cs-style1 cs-bg" style={{ minHeight: '150px', display: 'flex', alignItems: 'flex-end', paddingBottom: '30px', paddingTop: '150px' }}>
-                <Div className="container">
-                     <h1 className="cs-page_title cs-primary_color cs-font_42">Arka Plan Düzenleme Aracı</h1>
-                </Div>
+            {/* 1. Header (Navigasyon Menüsü) */}
+            <HeaderEmulator />
+
+            {/* 2. Sayfa Başlığı (Page Heading) */}
+            {/* Header fixed olduğu için padding-top ekleyerek içeriği aşağı itiyoruz */}
+            <div className="cs-page_heading cs-style1 cs-bg" style={{ paddingTop: '200px', paddingBottom: '50px', backgroundImage: 'url(images/arka2.png)' }}>
+                <div className="container">
+                    <div className="cs-page_heading_in">
+                        <h1 className="cs-page_title cs-white_color">Arka Plan Düzenleme Aracı</h1>
+                        <div className="cs-breadcrumb cs-ternary_color">
+                            <span>Ana Sayfa</span> / <span>Araçlar</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <Spacing lg='150' md='80'/>
+            <Spacing lg='100' md='50'/>
             
             <Div className='cs-shape_wrap_4'>
-                {/* Sitenizin özel şekil divleri (Temayı korumak için gerekli) */}
                 <Div className="cs-shape_4"></Div>
                 <Div className="cs-shape_4"></Div>
                 
                 <Div className="container">
                     <Div className="row flex flex-wrap">
-                        
-                        {/* Sol Sütun: Başlık ve Açıklama (col-xl-4) */}
-                        <Div className="col-xl-4 w-full lg:w-1/3 px-[10px]">
+                        {/* Sol Kolon */}
+                        <Div className="col-xl-4 w-full lg:w-1/3 px-[10px] mb-10 lg:mb-0">
                             <SectionHeadingEmulator title='Görselinizi Yükleyin ve İstenen Arka Planı Anında Oluşturun' />
-                            <Spacing lg='90' md='45'/>
+                            <p className="cs-ternary_color mt-4 cs-font_18">
+                                Yapay zeka destekli aracımızla ürün fotoğraflarınızı veya portrelerinizi saniyeler içinde düzenleyin.
+                            </p>
                         </Div>
 
-                        {/* Sağ Sütun: Düzenleme Kontrolleri (col-xl-8) */}
-                        <Div className='col-xl-8 w-full lg:w-2/3 px-[10px]'>
-                            <Div className='row cs-row_gap_20'> {/* İç Row yapısı */}
-                                
-                                <div className="p-8 md:p-10 cs-radius_15" style={{backgroundColor: '#000', border: '1px solid var(--accent-color)', boxShadow: '0 0 30px rgba(120, 97, 255, 0.1)'}}>
+                        {/* Sağ Kolon (Form Alanı) */}
+                        <Div className="col-xl-8 w-full lg:w-2/3 px-[10px]">
+                            <Div className='row cs-row_gap_20'>
+                                <div className="p-8 md:p-10 cs-radius_15" style={{backgroundColor: '#080808', border: '1px solid #333'}}>
                                     
-                                    <h3 className="cs-primary_color cs-font_30 mb-6">Düzenleme Kontrolleri</h3>
+                                    <h3 className="cs-primary_color cs-font_30 mb-6">Düzenleme Paneli</h3>
 
-                                    {/* Etkileşim Alanı */}
-                                    <div className="flex flex-col md:flex-row gap-4 mb-6 items-end">
-                                        
-                                        {/* Dosya Yükleme */}
+                                    <div className="flex flex-col md:flex-row gap-6 mb-8 items-end">
                                         <div className="flex-1 w-full">
-                                            <label className="block mb-2 cs-ternary_color cs-font_18">1. Görsel Yükle (PNG/JPG)</label>
-                                            <input 
-                                                type="file" 
-                                                accept="image/*" 
-                                                onChange={handleImageUpload} 
-                                                className="cs-form_field file:cs-btn file:cs-style1 file:cs-accent_bg file:cs-white_color"
-                                            />
+                                            <label className="block mb-2 cs-ternary_color cs-font_18">1. Görsel Seç</label>
+                                            <input type="file" accept="image/*" onChange={handleImageUpload} className="cs-form_field"/>
                                         </div>
-
-                                        {/* İstek Metni */}
                                         <div className="flex-1 w-full">
-                                            <label className="block mb-2 cs-ternary_color cs-font_18">2. Düzenleme İsteği (Prompt)</label>
-                                            <input 
-                                                type="text" 
-                                                placeholder="Örn: Arka planı bembeyaz yap" 
-                                                value={prompt}
-                                                onChange={(e) => setPrompt(e.target.value)}
-                                                className="cs-form_field"
-                                            />
+                                            <label className="block mb-2 cs-ternary_color cs-font_18">2. İstek (Prompt)</label>
+                                            <input type="text" value={prompt} onChange={(e) => setPrompt(e.target.value)} className="cs-form_field"/>
                                         </div>
-
-                                        {/* İşlem Butonu */}
                                         <div className="w-full md:w-auto">
-                                            <button 
-                                                onClick={processImage}
-                                                disabled={!base64ImageData || isLoading}
-                                                className={`cs-btn cs-style1 ${
-                                                    !base64ImageData || isLoading
-                                                        ? 'opacity-50 cursor-not-allowed' // Devre dışı stili
-                                                        : 'cs-accent_bg cs-white_color' // Aktif stili
-                                                } w-full md:w-auto flex items-center justify-center`}
-                                            >
-                                                <span className="mr-2">{isLoading ? 'Oluşturuluyor...' : 'Düzenle ve Oluştur'}</span>
-                                                {isLoading && (
-                                                    // Loader'ı sizin temanızın renklerine uyarladık
-                                                    <div className="cs-loader ml-3" style={{borderTopColor: 'var(--accent-color)', borderColor: 'rgba(158, 161, 173, 0.3)'}}></div>
-                                                )}
+                                            <button onClick={processImage} disabled={!base64ImageData || isLoading} className={`cs-btn cs-style1 ${!base64ImageData || isLoading ? 'opacity-50' : 'cs-accent_bg'} w-full md:w-auto flex justify-center`}>
+                                                <span>{isLoading ? 'İşleniyor...' : 'Başla'}</span>
                                             </button>
                                         </div>
                                     </div>
 
-                                    {/* Görsel Sonuçları Alanı */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                                        {/* Orijinal Görsel */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="flex flex-col items-center">
-                                            <h4 className="cs-primary_color cs-font_24 mb-3">Orijinal Görsel</h4>
-                                            <div className="w-full h-80 cs-radius_15 cs-center" style={{backgroundColor: '#000', border: '2px dashed rgba(158, 161, 173, 0.5)'}}>
-                                                <img 
-                                                    src={base64ImageData || 'https://placehold.co/300x300/161616/e4e4e4?text=Görsel+Yükle'}
-                                                    alt="Orijinal Görsel Önizlemesi" 
-                                                    className="max-h-full max-w-full object-contain cs-radius_15" 
-                                                />
+                                            <h4 className="cs-white_color cs-font_18 mb-3 opacity-70">Orijinal</h4>
+                                            <div className="w-full h-64 cs-radius_15 cs-center bg-[#161616] border border-[#333]">
+                                                <img src={base64ImageData || 'https://placehold.co/300x200/222/555?text=Resim+Yok'} className="max-h-full max-w-full object-contain cs-radius_15" />
                                             </div>
                                         </div>
-
-                                        {/* İşlenmiş Görsel */}
                                         <div className="flex flex-col items-center">
-                                            <h4 className="cs-primary_color cs-font_24 mb-3">İşlenmiş Görsel</h4>
-                                            <div className="w-full h-80 cs-radius_15 cs-center relative" style={{backgroundColor: '#000', border: '2px dashed rgba(158, 161, 173, 0.5)'}}>
-                                                {/* Transparan Arka Plan Deseni */}
-                                                <div className="absolute inset-0 opacity-20 repeating-checkered-dark cs-radius_15"></div>
-                                                <img 
-                                                    src={processedImageUrl || 'https://placehold.co/300x300/161616/e4e4e4?text=Sonuç+Burada+Görünecek'} 
-                                                    alt="İşlenmiş Görsel Önizlemesi" 
-                                                    className="max-h-full max-w-full object-contain cs-radius_15 relative z-10"
-                                                />
+                                            <h4 className="cs-white_color cs-font_18 mb-3 opacity-70">Sonuç</h4>
+                                            <div className="w-full h-64 cs-radius_15 cs-center bg-[#161616] border border-[#333] relative">
+                                                <div className="absolute inset-0 opacity-10 repeating-checkered-dark cs-radius_15"></div>
+                                                <img src={processedImageUrl || 'https://placehold.co/300x200/222/555?text=Sonuç'} className="max-h-full max-w-full object-contain cs-radius_15 relative z-10" />
                                             </div>
                                         </div>
                                     </div>
                                     
-                                    {/* Mesaj Kutusu */}
-                                    <div className={getMessageBoxClasses()}>
-                                        {message}
-                                    </div>
-
+                                    <div className={getMessageBoxClasses()}>{message}</div>
                                 </div>
-
                             </Div>
                         </Div>
                     </Div>
                 </Div>
             </Div>
             
-            {/* CTA ve Footer Kısımları Kaldırıldı, Sadece Spacing Bırakıldı (Ana uygulamanızın Footer'ı buraya oturacaktır) */}
             <Spacing lg='150' md='80'/>
-            
         </div>
     );
 }
 
-// --- SİTENİZİN ÖZEL CSS STİLLERİ ---
-// (Bu blok, tarayıcının doğru renkleri ve fontları kullanmasını sağlar)
+// --- CSS ---
 const styles = `
-    /*--------------------------------------------------------------
-    ## Renk ve Font Değişkenleri
-    ----------------------------------------------------------------*/
-    
-    /* Renk Değişkenleri SCSS'ten Düz CSS'e Çevrildi */
+    /* Temel Değişkenler */
     :root {
-        --white-color: #9ea1ad;
-        --black-color: #161616;
         --primary-color: #e4e4e4;
-        --secondary-color: rgba(228, 228, 228, 0.7); /* rgba($primary, 0.7) */
-        --ternary-color: #999696;
-        --border-color: #161616;
-        --gray-color: #161616;
+        --secondary-color: rgba(228, 228, 228, 0.7);
         --accent-color: #7861ff;
-        --gradient-color: linear-gradient(to right, #5884ee, #00ff00);
+        --gray-color: #161616;
+        --border-color: #333;
     }
-
-    /* Google Fonts */
     @import url('https://api.fontshare.com/v2/css?f[]=clash-grotesk@200,300,400,500,600,700&display=swap');
-
-    body, html {
-        color: var(--secondary-color);
-        font-family: 'Clash Grotesk', sans-serif;
-        font-size: 20px;
-        font-weight: 500;
-        line-height: 1.6em;
-        overflow-x: hidden;
-        background-color: var(--gray-color);
-    }
     
-    /* Başlık Stilleri */
-    h1, h2, h3, h4, h5, h6 {
-        clear: both;
-        color: var(--primary-color);
-        padding: 0;
-        margin: 0 0 20px 0;
-        font-weight: 600;
-        line-height: 1.3em;
-        font-family: 'Clash Grotesk', sans-serif;
+    body, html { 
+        background-color: var(--gray-color); 
+        color: var(--secondary-color); 
+        font-family: 'Clash Grotesk', sans-serif; 
+        margin: 0; padding: 0;
     }
 
-    h1 { font-size: 56px; }
-    h2 { font-size: 42px; }
-    h3 { font-size: 30px; }
-    h4 { font-size: 24px; }
-    h5 { font-size: 18px; }
-    h6 { font-size: 16px; }
-    
-    /* Genel Sınıflar */
-    .cs-primary_font { font-family: 'Clash Grotesk', sans-serif; }
-    .cs-primary_color { color: var(--primary-color); }
-    .cs-ternary_color { color: var(--ternary-color); }
-    .cs-accent_color { color: var(--accent-color); }
-    .cs-accent_bg { background-color: var(--accent-color); }
-    .cs-gray_bg { background-color: var(--gray-color); }
-    .cs-white_color { color: var(--white-color); }
-    .cs-radius_15 { border-radius: 15px; }
-    .cs-font_18 { font-size: 18px; }
-    .cs-font_24 { font-size: 24px; }
-    .cs-font_30 { font-size: 30px; }
-    .cs-font_42 { font-size: 42px; }
-    .cs-bg { background-size: cover; background-repeat: no-repeat; background-position: center; }
-    .cs-center { display: flex; align-items: center; justify-content: center; }
-
-    /* Container ve Row Gap */
-    .container {
-        width: 100%;
-        padding-right: 15px;
-        padding-left: 15px;
-        margin-right: auto;
-        margin-left: auto;
-        max-width: 1200px;
-    }
-    .row {
-        display: flex;
-        flex-wrap: wrap;
-        margin-left: -15px;
-        margin-right: -15px;
-    }
-    .col-xl-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
-    .col-xl-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
-    .w-full { width: 100%; }
-    .lg\\:w-1\\/3 { @media (min-width: 992px) { width: 33.333333%; } }
-    .lg\\:w-2\\/3 { @media (min-width: 992px) { width: 66.666667%; } }
-    .px-\\[10px\\] { padding-left: 10px; padding-right: 10px; }
-
-    .cs-row_gap_20 {
-        margin-left: -10px;
-        margin-right: -10px;
-        > div {
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-    }
-
-    /* Input ve Form Alanları */
-    .cs-form_field {
-        display: block;
-        width: 100%;
-        padding: 10px 20px;
-        border-radius: 15px;
-        outline: none;
-        transition: all 0.3s ease;
-        border: 2px solid var(--ternary-color);
-        background-color: transparent;
-        color: var(--primary-color);
-    }
-    .cs-form_field:focus {
-        border-color: var(--accent-color);
-    }
-    
-    /* Buton Stilleri (.cs-btn.cs-style1) */
-    .cs-btn.cs-style1 {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 13px 26px;
-        transition: all 0.3s ease;
-        border: transparent;
-        color: var(--primary-color);
-        position: relative;
-        line-height: 1.5em;
-        font-weight: 600;
-        border-radius: 15px;
-        background-color: var(--accent-color);
-        color: #fff;
-        cursor: pointer;
-    }
-    .cs-btn.cs-style1::before {
-        content: '';
-        position: absolute;
+    /* Header Stilleri (Resim.jpg'den esinlenildi) */
+    .cs-site_header {
+        position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(22, 22, 22, 0.4); /* rgba($black, 0.4) */
-        transform: scaleX(0);
-        transform-origin: 0 50%;
-        transition-property: transform;
-        transition-duration: 0.6s;
-        transition-timing-function: ease-out;
-        border-radius: inherit;
+        width: 100%;
+        z-index: 100;
+        background-color: rgba(22, 22, 22, 0.95); /* Hafif transparan siyah */
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding: 20px 0;
     }
-    .cs-btn.cs-style1:hover::before {
-        transform: scaleX(1);
-        transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+    .cs-main_header_in {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 50px;
     }
-    
-    /* Page Heading Stili (Sadece Yükseklik ve Konumlandırma için basit tanım) */
-    .cs-page_heading.cs-style1 {
+    .cs-nav_list {
+        display: flex;
+        list-style: none;
+        margin: 0; padding: 0;
+    }
+    .cs-nav_list li {
+        margin: 0 20px;
+    }
+    .cs-nav_list a {
+        color: #999;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 16px;
+        transition: color 0.3s;
+    }
+    .cs-nav_list a:hover, .cs-nav_list a.cs-active {
+        color: var(--accent-color); /* Mor renk */
+    }
+    .cs-icon_btn {
+        color: #fff;
+        margin-left: 15px;
+        font-weight: bold;
+        opacity: 0.7;
+        cursor: pointer;
+    }
+    .cs-icon_btn:hover { opacity: 1; color: var(--accent-color); }
+
+    /* Genel Sınıflar */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+    .cs-primary_color { color: var(--primary-color); }
+    .cs-white_color { color: #fff; }
+    .cs-ternary_color { color: #999; }
+    .cs-accent_bg { background-color: var(--accent-color); color: #fff; }
+    .cs-radius_15 { border-radius: 15px; }
+    .cs-font_18 { font-size: 18px; }
+    .cs-font_30 { font-size: 30px; }
+    .cs-btn {
+        padding: 12px 30px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s;
+    }
+    .cs-btn:hover { transform: translateY(-2px); }
+    .cs-form_field {
+        width: 100%; background: transparent; border: 1px solid #444; color: #fff; padding: 12px; border-radius: 10px; outline: none;
+    }
+    .cs-form_field:focus { border-color: var(--accent-color); }
+
+    /* Page Heading */
+    .cs-page_heading {
         position: relative;
-        z-index: 1; 
-        background-color: var(--gray-color); /* Varsayılan koyu arka plan */
         overflow: hidden;
     }
-    .cs-page_heading.cs-style1::after {
+    .cs-page_heading::after {
         content: '';
         position: absolute;
-        right: -30px;
-        top: -30px;
-        height: 151px;
-        width: 151px;
+        top: 0; right: 0;
+        width: 300px; height: 300px;
         background: var(--accent-color);
-        opacity: 0.8;
-        filter: blur(125px);
+        filter: blur(150px);
+        opacity: 0.2;
         z-index: 0;
-    }
-    .cs-page_heading.cs-style1 .cs-page_title {
-        margin-bottom: 0; /* Başlık bandındaki gereksiz marjini kaldırdık */
-    }
-    
-    /* Yükleyici Stili */
-    .cs-loader {
-        border: 4px solid rgba(158, 161, 173, 0.3); 
-        border-top: 4px solid var(--accent-color); 
         border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        animation: spin 1s linear infinite;
+        transform: translate(30%, -30%);
     }
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    /* Şeffaflık deseni (koyu tema için) */
-    .repeating-checkered-dark {
-        background-color: #3f3f46; /* gray-700 */
-        background-image: linear-gradient(45deg, #27272a 25%, transparent 25%, transparent 75%, #27272a 75%, #27272a),
-                          linear-gradient(45deg, #27272a 25%, transparent 25%, transparent 75%, #27272a 75%, #27272a);
-        background-size: 10px 10px;
-        background-position: 0 0, 5px 5px;
-    }
-    
-    /* Mobil Uyumlu Font Boyutları */
-    @media screen and (max-width: 991px) {
-        body, html { font-size: 16px; }
-        h2 { font-size: 36px; margin-bottom: 10px; }
-        .cs-page_heading.cs-style1 { height: 250px; padding-top: 100px; }
-    }
-    @media screen and (max-width: 767px) {
-        h1 { font-size: 42px; }
+
+    /* Mobil Uyum */
+    @media (max-width: 991px) {
+        .cs-nav_list { display: none; } /* Mobilde menüyü gizle (basitlik için) */
+        .cs-page_heading { padding-top: 120px !important; }
     }
 `;
 
-// Stilleri sayfaya ekle
 const styleSheet = document.createElement("style");
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
