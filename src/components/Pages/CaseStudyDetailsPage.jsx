@@ -5,26 +5,18 @@ const MODEL_NAME = "gemini-2.5-flash-image-preview";
 const API_URL_BASE = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
 const API_KEY = ""; // Canvas ortamında otomatik sağlanacaktır.
 
-// --- KULLANICININ ÖZEL BİLEŞEN EMÜLASYONLARI ---
+// --- KULLANICININ TEMEL BİLEŞEN EMÜLASYONLARI (Sadece Yapısal Elemanlar) ---
 
 /**
- * Spacing Bileşeni Emülasyonu: Sizin CSS'iniz tarafından boşluklar sağlanacaktır.
- * lg: masaüstü, md: mobil. React tarafında sadece div döndürür.
+ * Spacing Bileşeni Emülasyonu: Sadece boşluk divi döndürür.
+ * (lg: masaüstü, md: mobil)
  */
 const Spacing = ({ lg, md }) => {
-    // Sizin CSS'inizde boşluklar muhtemelen margin/padding sınıflarıyla yönetiliyor.
-    // Burada inline style ile geçici boşluklar tanımlıyoruz, ancak idealde
-    // Sizin dış CSS'inizdeki "cs-spacing-lg-150" gibi sınıflar bunu halletmeli.
+    // Sizin CSS'iniz tarafından boşluklar sağlanacaktır.
     const customStyle = {
         paddingTop: lg ? `${parseInt(lg) / 4}px` : '0',
         paddingBottom: lg ? `${parseInt(lg) / 4}px` : '0',
-        // Mobil için ek padding (md)
-        '@media (max-width: 991px)': {
-            paddingTop: md ? `${parseInt(md) / 4}px` : '0',
-            paddingBottom: md ? `${parseInt(md) / 4}px` : '0',
-        }
     };
-    // Tailwind yerine genel sınıf kullanıyoruz.
     return <div className={`cs-spacing-h-${lg}-${md}`} style={customStyle}></div>;
 };
 
@@ -38,25 +30,6 @@ const Div = ({ className, children }) => (
 );
 
 /**
- * PageHeading Bileşeni Emülasyonu: Başlık bölümünü oluşturur.
- */
-const PageHeadingEmulator = ({ title, bgSrc, pageLinkText }) => (
-    <div 
-        className="cs-page_heading cs-style1 cs-bg" // Sizin özel başlık sınıfınız
-        style={{ backgroundImage: `url(${bgSrc})` }}
-    >
-        <div className="container">
-            <div className="cs-page_heading_in">
-                <h1 className="cs-page_title cs-primary_color">{title}</h1>
-                <div className="breadcrumb">
-                    <div className="breadcrumb-item">{pageLinkText}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-);
-
-/**
  * SectionHeading Bileşeni Emülasyonu: Sol taraftaki başlığı oluşturur.
  */
 const SectionHeadingEmulator = ({ title }) => (
@@ -64,25 +37,6 @@ const SectionHeadingEmulator = ({ title }) => (
     <h2 className="cs-section_title cs-primary_color">
         {title}
     </h2>
-);
-
-/**
- * Cta Bileşeni Emülasyonu: Alt kısımdaki aksiyon çağrısını oluşturur.
- */
-const CtaEmulator = ({ title, btnText, btnLink, bgSrc }) => (
-    <Div className="container">
-        <div 
-            className={`cs-accent_bg cs-bg cs-shine_hover_1 p-[60px] rounded-[15px] flex flex-col md:flex-row justify-between items-center`}
-            style={{ backgroundImage: `url(${bgSrc})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-        >
-            <h2 className="cs-white_color cs-font_42 mb-4 md:mb-0 leading-tight">
-                <span dangerouslySetInnerHTML={{ __html: title }}></span>
-            </h2>
-            <a href={btnLink} className={`cs-btn cs-style1 cs-type1 cs-white_color`}>
-                {btnText}
-            </a>
-        </div>
-    </Div>
 );
 
 // --- API LOJİĞİ VE ANA BİLEŞEN ---
@@ -95,6 +49,7 @@ export default function App() {
     const [message, setMessage] = useState(null);
     const [messageType, setMessageType] = useState('info');
 
+    // Sayfa yüklendiğinde en üste kaydır
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -219,10 +174,10 @@ export default function App() {
 
         switch (messageType) {
             case 'success':
-                // Başarı (Örn: Yeşil - sizin paletinizde tanımlı değil, varsayılan koyu/açık yeşil)
+                // Başarı (Koyu yeşil)
                 return `${base} bg-[#1e4620] text-[#a7f3d0] border border-[#347437]`;
             case 'error':
-                 // Hata (Örn: Kırmızı)
+                 // Hata (Koyu kırmızı)
                 return `${base} bg-[#450a0a] text-[#fca5a5] border border-[#7f1d1d]`;
             default:
                 // Bilgi (Accent Rengi - Mor)
@@ -235,17 +190,17 @@ export default function App() {
         // body ve html stilleri cs-gray_bg ve font-family ile sağlanacak
         <div className="cs-gray_bg cs-primary_font min-h-screen">
             
-            {/* PageHeading */}
-            <PageHeadingEmulator
-                title="Arka Plan Düzenleme Aracı"
-                bgSrc="images/arka2.png" // Orijinal resim kaynağını kullandık
-                pageLinkText="Yeni Web Aracımız"
-            />
-            
+            {/* Sayfa Başlık Alanı (PageHeading'in yerine) - Yüksekliği ayarlayarak Header altındaki boşluğu taklit ediyoruz */}
+            <div className="cs-page_heading cs-style1 cs-bg" style={{ minHeight: '150px', display: 'flex', alignItems: 'flex-end', paddingBottom: '30px', paddingTop: '150px' }}>
+                <Div className="container">
+                     <h1 className="cs-page_title cs-primary_color cs-font_42">Arka Plan Düzenleme Aracı</h1>
+                </Div>
+            </div>
+
             <Spacing lg='150' md='80'/>
             
             <Div className='cs-shape_wrap_4'>
-                {/* Sitenizin özel şekil divleri */}
+                {/* Sitenizin özel şekil divleri (Temayı korumak için gerekli) */}
                 <Div className="cs-shape_4"></Div>
                 <Div className="cs-shape_4"></Div>
                 
@@ -262,7 +217,7 @@ export default function App() {
                         <Div className='col-xl-8 w-full lg:w-2/3 px-[10px]'>
                             <Div className='row cs-row_gap_20'> {/* İç Row yapısı */}
                                 
-                                <div className="p-8 md:p-10 cs-radius_15" style={{backgroundColor: '#000', border: '1px solid #7861ff', boxShadow: '0 0 30px rgba(120, 97, 255, 0.1)'}}>
+                                <div className="p-8 md:p-10 cs-radius_15" style={{backgroundColor: '#000', border: '1px solid var(--accent-color)', boxShadow: '0 0 30px rgba(120, 97, 255, 0.1)'}}>
                                     
                                     <h3 className="cs-primary_color cs-font_30 mb-6">Düzenleme Kontrolleri</h3>
 
@@ -306,7 +261,7 @@ export default function App() {
                                                 <span className="mr-2">{isLoading ? 'Oluşturuluyor...' : 'Düzenle ve Oluştur'}</span>
                                                 {isLoading && (
                                                     // Loader'ı sizin temanızın renklerine uyarladık
-                                                    <div className="cs-loader ml-3" style={{borderTopColor: '#7861ff', borderColor: 'rgba(158, 161, 173, 0.3)'}}></div>
+                                                    <div className="cs-loader ml-3" style={{borderTopColor: 'var(--accent-color)', borderColor: 'rgba(158, 161, 173, 0.3)'}}></div>
                                                 )}
                                             </button>
                                         </div>
@@ -354,16 +309,7 @@ export default function App() {
                 </Div>
             </Div>
             
-            <Div className="container">
-                <Spacing lg='90' md='80'/>
-                <CtaEmulator
-                    title="Markanızı bizimle <br />büyütmeye ne dersiniz?"
-                    btnText="Şimdi Başla!"
-                    btnLink="/iletisim"
-                    bgSrc="/images/ctabg.png"
-                />
-            </Div>
-
+            {/* CTA ve Footer Kısımları Kaldırıldı, Sadece Spacing Bırakıldı (Ana uygulamanızın Footer'ı buraya oturacaktır) */}
             <Spacing lg='150' md='80'/>
             
         </div>
@@ -371,7 +317,7 @@ export default function App() {
 }
 
 // --- SİTENİZİN ÖZEL CSS STİLLERİ ---
-
+// (Bu blok, tarayıcının doğru renkleri ve fontları kullanmasını sağlar)
 const styles = `
     /*--------------------------------------------------------------
     ## Renk ve Font Değişkenleri
@@ -423,7 +369,6 @@ const styles = `
     
     /* Genel Sınıflar */
     .cs-primary_font { font-family: 'Clash Grotesk', sans-serif; }
-    .cs-secondary_font { font-family: 'Clash Grotesk', sans-serif; }
     .cs-primary_color { color: var(--primary-color); }
     .cs-ternary_color { color: var(--ternary-color); }
     .cs-accent_color { color: var(--accent-color); }
@@ -445,7 +390,7 @@ const styles = `
         padding-left: 15px;
         margin-right: auto;
         margin-left: auto;
-        max-width: 1200px; /* Bootstrap default uyumu */
+        max-width: 1200px;
     }
     .row {
         display: flex;
@@ -521,28 +466,13 @@ const styles = `
         transform: scaleX(1);
         transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
     }
-    .cs-btn.cs-style1.cs-type1 {
-        border: 2px solid #fff;
-        background-color: transparent;
-        border-radius: 30px;
-        transition: all 0.6s ease-in-out;
-        overflow: hidden;
-    }
-    .cs-btn.cs-style1.cs-type1::before {
-        background-color: #fff;
-        border-radius: 30px;
-        z-index: -1;
-    }
-    .cs-btn.cs-style1.cs-type1:hover {
-        color: var(--accent-color);
-    }
-
-    /* Page Heading Stili */
+    
+    /* Page Heading Stili (Sadece Yükseklik ve Konumlandırma için basit tanım) */
     .cs-page_heading.cs-style1 {
-        height: 400px;
-        padding: 120px 0 50px;
         position: relative;
-        z-index: 1; /* Eklediğiniz overlay'ler için z-index yönetimi */
+        z-index: 1; 
+        background-color: var(--gray-color); /* Varsayılan koyu arka plan */
+        overflow: hidden;
     }
     .cs-page_heading.cs-style1::after {
         content: '';
@@ -557,22 +487,9 @@ const styles = `
         z-index: 0;
     }
     .cs-page_heading.cs-style1 .cs-page_title {
-        margin-bottom: 18px;
-    }
-    .cs-page_heading.cs-style1 .breadcrumb {
-        color: var(--ternary-color);
-    }
-    .cs-page_heading.cs-style1 .breadcrumb-item.active {
-        color: var(--white-color);
+        margin-bottom: 0; /* Başlık bandındaki gereksiz marjini kaldırdık */
     }
     
-    /* CTA Stili İpuçları */
-    .cs-shine_hover_1 {
-        position: relative;
-        overflow: hidden;
-        /* Shine animasyonu ve hover::before stilleri (kodu çok uzun olduğu için özetledim) */
-    }
-
     /* Yükleyici Stili */
     .cs-loader {
         border: 4px solid rgba(158, 161, 173, 0.3); 
@@ -600,7 +517,7 @@ const styles = `
     @media screen and (max-width: 991px) {
         body, html { font-size: 16px; }
         h2 { font-size: 36px; margin-bottom: 10px; }
-        .cs-page_heading.cs-style1 { height: 400px; }
+        .cs-page_heading.cs-style1 { height: 250px; padding-top: 100px; }
     }
     @media screen and (max-width: 767px) {
         h1 { font-size: 42px; }
@@ -608,7 +525,6 @@ const styles = `
 `;
 
 // Stilleri sayfaya ekle
-// Bu stil bloğu, React bileşeninizle birlikte çalıştığında sitenizin temasını sağlayacaktır.
 const styleSheet = document.createElement("style");
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
